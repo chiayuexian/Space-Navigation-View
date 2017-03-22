@@ -133,6 +133,8 @@ public class SpaceNavigationView extends RelativeLayout {
 
     private boolean centerCurveDisabled = false;
     private boolean centerButtonFull = false;
+    private int centerLabelBottomMargin = 0;
+    private int centerButtonBottomMargin = 0;
 
     /**
      * Constructors
@@ -149,6 +151,7 @@ public class SpaceNavigationView extends RelativeLayout {
         super(context, attrs, defStyleAttr);
         this.context = context;
         centreButton = new CentreButton(context);
+        centreButton.setId(R.id.centre_button_id);
         centreButton.setSize(FloatingActionButton.SIZE_NORMAL);
         centreButton.setUseCompatPadding(false);
         init(attrs);
@@ -186,6 +189,8 @@ public class SpaceNavigationView extends RelativeLayout {
             centerCurveDisabled = typedArray.getBoolean(R.styleable.SpaceNavigationView_centre_curve_disabled,false);
             centerLabel = typedArray.getString(R.styleable.SpaceNavigationView_centre_label);
             centerButtonFull = typedArray.getBoolean(R.styleable.SpaceNavigationView_centre_button_full_icon,false);
+            centerButtonBottomMargin = typedArray.getDimensionPixelSize(R.styleable.SpaceNavigationView_centre_button_bottom_margin,0);
+            centerLabelBottomMargin = typedArray.getDimensionPixelSize(R.styleable.SpaceNavigationView_centre_label_bottom_margin,0);
             typedArray.recycle();
         }
     }
@@ -340,6 +345,7 @@ public class SpaceNavigationView extends RelativeLayout {
          * Set center button label params
          */
         centerLabelTextView = new TextView(this.getContext());
+        centerLabelTextView.setId(R.id.centre_label_id);
         centerLabelTextView.setText(centerLabel);
         centerLabelTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, spaceItemTextSize);
         centerLabelTextView.setTextColor(inActiveSpaceItemColor);
@@ -352,7 +358,9 @@ public class SpaceNavigationView extends RelativeLayout {
         LayoutParams centerLabelParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
         centerLabelParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         centerLabelParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        centerLabelParams.bottomMargin = Utils.getPxFromDp(getContext(),16);
+        centerLabelParams.bottomMargin = centerLabelBottomMargin;
+//        centerLabelParams.addRule(RelativeLayout.BELOW,centreButton.getId());
+
 
 
         /**
@@ -363,6 +371,7 @@ public class SpaceNavigationView extends RelativeLayout {
         if(centerLabel != null && !centerLabel.isEmpty()){
             fabParams.addRule(RelativeLayout.ABOVE,centerLabelTextView.getId());
             fabParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            fabParams.bottomMargin = centerButtonBottomMargin;
         } else {
             fabParams.addRule(RelativeLayout.CENTER_IN_PARENT);
         }

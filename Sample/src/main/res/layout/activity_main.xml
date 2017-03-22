@@ -24,5 +24,7 @@
         app:centre_curve_disabled="true"
         app:space_item_icon_size="40dp"
         app:centre_button_full_icon="true"
+        app:centre_button_bottom_margin="4dp"
+        app:centre_label_bottom_margin="2dp"
         app:layout_behavior="com.luseen.spacenavigation.SpaceNavigationViewBehavior" />
 </android.support.design.widget.CoordinatorLayout>
