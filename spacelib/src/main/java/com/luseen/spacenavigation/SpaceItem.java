@@ -23,10 +23,16 @@ public class SpaceItem implements Serializable {
     private String itemName;
 
     private int itemIcon;
+    private int itemSelectedIcon = -1;
 
     public SpaceItem(String itemName, int itemIcon) {
         this.itemName = itemName;
         this.itemIcon = itemIcon;
+    }
+    public SpaceItem(String itemName, int itemIcon,int itemSelectedIcon) {
+        this.itemName = itemName;
+        this.itemIcon = itemIcon;
+        this.itemSelectedIcon = itemSelectedIcon;
     }
 
     String getItemName() {
@@ -44,4 +50,7 @@ public class SpaceItem implements Serializable {
     void setItemIcon(int itemIcon) {
         this.itemIcon = itemIcon;
     }
+
+    int getItemSelectedIcon() { return itemSelectedIcon; }
+    void setItemSelectedIcon(int itemSelectedIcon){this.itemSelectedIcon = itemSelectedIcon;}
 }

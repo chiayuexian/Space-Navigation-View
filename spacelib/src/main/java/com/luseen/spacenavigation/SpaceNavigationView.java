@@ -564,10 +564,17 @@ public class SpaceNavigationView extends RelativeLayout {
              */
             if (i == currentSelectedItem) {
                 spaceItemText.setTextColor(activeSpaceItemColor);
+                if(spaceItems.get(i).getItemSelectedIcon() != -1){
+                    spaceItemIcon.setImageResource(spaceItems.get(i).getItemSelectedIcon());
+                }
                 Utils.changeImageViewTint(spaceItemIcon, activeSpaceItemColor);
             } else {
                 spaceItemText.setTextColor(inActiveSpaceItemColor);
+                if(spaceItems.get(i).getItemSelectedIcon() != -1){
+                    spaceItemIcon.setImageResource(spaceItems.get(i).getItemIcon());
+                }
                 Utils.changeImageViewTint(spaceItemIcon, inActiveSpaceItemColor);
+
             }
 
             textAndIconContainer.setOnClickListener(new OnClickListener() {
@@ -654,12 +661,18 @@ public class SpaceNavigationView extends RelativeLayout {
                 ImageView spaceItemIcon = (ImageView) textAndIconContainer.findViewById(R.id.space_icon);
                 TextView spaceItemText = (TextView) textAndIconContainer.findViewById(R.id.space_text);
                 spaceItemText.setTextColor(activeSpaceItemColor);
+                if(spaceItems.get(i).getItemSelectedIcon() != -1){
+                    spaceItemIcon.setImageResource(spaceItems.get(i).getItemSelectedIcon());
+                }
                 Utils.changeImageViewTint(spaceItemIcon, activeSpaceItemColor);
             } else if (i == currentSelectedItem) {
                 RelativeLayout textAndIconContainer = (RelativeLayout) spaceItemList.get(i);
                 ImageView spaceItemIcon = (ImageView) textAndIconContainer.findViewById(R.id.space_icon);
                 TextView spaceItemText = (TextView) textAndIconContainer.findViewById(R.id.space_text);
                 spaceItemText.setTextColor(inActiveSpaceItemColor);
+                if(spaceItems.get(i).getItemSelectedIcon() != -1){
+                    spaceItemIcon.setImageResource(spaceItems.get(i).getItemIcon());
+                }
                 Utils.changeImageViewTint(spaceItemIcon, inActiveSpaceItemColor);
             }
         }
