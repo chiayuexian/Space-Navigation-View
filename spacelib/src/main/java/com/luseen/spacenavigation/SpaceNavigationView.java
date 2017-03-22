@@ -146,6 +146,7 @@ public class SpaceNavigationView extends RelativeLayout {
     public SpaceNavigationView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
+        centreButton = new CentreButton(context);
         init(attrs);
     }
 
@@ -303,7 +304,7 @@ public class SpaceNavigationView extends RelativeLayout {
 
         centreContent = buildBezierView();
 
-        centreButton = new CentreButton(context);
+//        centreButton = new CentreButton(context);
         centreButton.setSize(FloatingActionButton.SIZE_NORMAL);
         centreButton.setUseCompatPadding(false);
         centreButton.setRippleColor(centreButtonRippleColor);
@@ -1186,4 +1187,12 @@ public class SpaceNavigationView extends RelativeLayout {
     public void setInActiveCentreButtonIconColor(@ColorInt int color) {
         inActiveCentreButtonIconColor = color;
     }
+    /**
+     * get centre button
+     *
+     * @return The centre navigation button
+     */
+     public CentreButton getCentreButton() {
+            return this.centreButton;
+     }
 }
