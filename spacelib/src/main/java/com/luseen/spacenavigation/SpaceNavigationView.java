@@ -630,6 +630,7 @@ public class SpaceNavigationView extends RelativeLayout {
                         centreButton.setBackgroundTintList(ColorStateList.valueOf(activeCentreButtonBackgroundColor));
                     }
                 }
+                centerLabelTextView.setVisibility(View.INVISIBLE);
                 centerLabelTextView.setTextColor(activeSpaceItemColor);
             }
         }
@@ -647,6 +648,7 @@ public class SpaceNavigationView extends RelativeLayout {
                     }
 
                 }
+                centerLabelTextView.setVisibility(View.VISIBLE);
                 centerLabelTextView.setTextColor(inActiveSpaceItemColor);
             }
         }

@@ -1,6 +1,7 @@
 package com.luseen.spacenavigation;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
 import android.view.MotionEvent;
 
@@ -12,6 +13,9 @@ public class CentreButton extends FloatingActionButton {
 
     public CentreButton(Context context) {
         super(context);
+        if(Build.VERSION.SDK_INT > 21){
+            setElevation(0f);
+        }
     }
 
     @Override
