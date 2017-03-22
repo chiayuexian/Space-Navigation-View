@@ -30,6 +30,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,6 +69,7 @@ public class SpaceNavigationView extends RelativeLayout {
 
     private static final int MIN_SPACE_ITEM_SIZE = 2;
     private int spaceNavigationHeight = (int) getResources().getDimension(com.luseen.spacenavigation.R.dimen.space_navigation_height);
+    private final int spaceNavigationCenterWidth = (int) getResources().getDimension(R.dimen.space_navigation_centre_width);
     private enum LabelGravity { right, bottom }
     private LabelGravity spaceItemGravity = LabelGravity.right;
     private int mainContentHeight = (int) getResources().getDimension(com.luseen.spacenavigation.R.dimen.main_content_height);
@@ -147,6 +149,8 @@ public class SpaceNavigationView extends RelativeLayout {
         super(context, attrs, defStyleAttr);
         this.context = context;
         centreButton = new CentreButton(context);
+        centreButton.setSize(FloatingActionButton.SIZE_NORMAL);
+        centreButton.setUseCompatPadding(false);
         init(attrs);
     }
 
@@ -261,11 +265,9 @@ public class SpaceNavigationView extends RelativeLayout {
         /**
          * Get left or right content width
          */
-        if(centreButton != null) {
-            contentWidth = (width - centreButton.getWidth()) / 2;
-        } else {
-            contentWidth = width / 2;
-        }
+
+        contentWidth = (width - spaceNavigationCenterWidth) / 2;
+
 
         /**
          * Removing all view for not being duplicated
@@ -310,9 +312,7 @@ public class SpaceNavigationView extends RelativeLayout {
         centreButton.setRippleColor(centreButtonRippleColor);
         centreButton.setBackgroundTintList(ColorStateList.valueOf(centreButtonColor));
         centreButton.setImageResource(centreButtonIcon);
-        if(centerButtonFull){
-            centreButton.setPadding(0,0,0,0);
-        }
+
 
         if (isCentreButtonIconColorFilterEnabled)
             centreButton.getDrawable().setColorFilter(inActiveCentreButtonIconColor, PorterDuff.Mode.SRC_IN);
@@ -379,6 +379,9 @@ public class SpaceNavigationView extends RelativeLayout {
         LayoutParams centreContentParams = new LayoutParams(centreContentWight, spaceNavigationHeight);
         centreContentParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
         centreContentParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        if(centerButtonFull){
+            centreContentParams.setMargins(0,0,0,0);
+        }
 
         /**
          * Centre Background View content size and position
@@ -492,6 +495,15 @@ public class SpaceNavigationView extends RelativeLayout {
             spaceItemIcon.setImageResource(spaceItems.get(i).getItemIcon());
             spaceItemText.setText(spaceItems.get(i).getItemName());
             spaceItemText.setTextSize(TypedValue.COMPLEX_UNIT_PX, spaceItemTextSize);
+            if(spaceItems.size()> MIN_SPACE_ITEM_SIZE){
+                if (i > 1){
+                    spaceItemText.setGravity(Gravity.CENTER);
+                }
+            }else {
+                if (i > 0){
+                    spaceItemText.setGravity(Gravity.CENTER);
+                }
+            }
 
             /**
              * Set custom font to space item textView
