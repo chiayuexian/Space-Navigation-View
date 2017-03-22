@@ -17,5 +17,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        app:label_gravity="bottom"
+        app:space_navigation_height="100dp"
+        app:centre_curve_height="110dp"
+        app:centre_label="REGISTER"
+        app:centre_curve_disabled="true"
+        app:space_item_icon_size="40dp"
+        app:centre_button_full_icon="true"
         app:layout_behavior="com.luseen.spacenavigation.SpaceNavigationViewBehavior" />
 </android.support.design.widget.CoordinatorLayout>

@@ -67,8 +67,10 @@ public class SpaceNavigationView extends RelativeLayout {
     private static final int MAX_SPACE_ITEM_SIZE = 4;
 
     private static final int MIN_SPACE_ITEM_SIZE = 2;
-    private final int spaceNavigationHeight = (int) getResources().getDimension(com.luseen.spacenavigation.R.dimen.space_navigation_height);
-    private final int mainContentHeight = (int) getResources().getDimension(com.luseen.spacenavigation.R.dimen.main_content_height);
+    private int spaceNavigationHeight = (int) getResources().getDimension(com.luseen.spacenavigation.R.dimen.space_navigation_height);
+    private enum LabelGravity { right, bottom }
+    private LabelGravity spaceItemGravity = LabelGravity.right;
+    private int mainContentHeight = (int) getResources().getDimension(com.luseen.spacenavigation.R.dimen.main_content_height);
     private final int centreContentWight = (int) getResources().getDimension(com.luseen.spacenavigation.R.dimen.centre_content_width);
     private final int centreButtonSize = (int) getResources().getDimension(com.luseen.spacenavigation.R.dimen.space_centre_button_default_size);
     private List<SpaceItem> spaceItems = new ArrayList<>();
@@ -83,6 +85,8 @@ public class SpaceNavigationView extends RelativeLayout {
     private RelativeLayout centreBackgroundView;
     private LinearLayout leftContent, rightContent;
     private BezierView centreContent;
+    private String centerLabel = "";
+    private TextView centerLabelTextView;
     private Typeface customFont;
     private Context context;
     private int spaceItemIconSize = NOT_DEFINED;
@@ -121,9 +125,12 @@ public class SpaceNavigationView extends RelativeLayout {
 
     private boolean isCustomFont = false;
 
-    private boolean isCentreButtonIconColorFilterEnabled = true;
+    private boolean isCentreButtonIconColorFilterEnabled = false;
 
     private boolean shouldShowBadgeWithNinePlus = true;
+
+    private boolean centerCurveDisabled = false;
+    private boolean centerButtonFull = false;
 
     /**
      * Constructors
@@ -165,6 +172,15 @@ public class SpaceNavigationView extends RelativeLayout {
             inActiveCentreButtonIconColor = typedArray.getColor(R.styleable.SpaceNavigationView_inactive_centre_button_icon_color, resources.getColor(com.luseen.spacenavigation.R.color.default_inactive_item_color));
             activeCentreButtonBackgroundColor = typedArray.getColor(R.styleable.SpaceNavigationView_active_centre_button_background_color, resources.getColor(com.luseen.spacenavigation.R.color.centre_button_color));
 
+
+            int gravity = typedArray.getInt(R.styleable.SpaceNavigationView_label_gravity,0);
+            spaceItemGravity = LabelGravity.values()[gravity];
+
+            spaceNavigationHeight = typedArray.getDimensionPixelSize(R.styleable.SpaceNavigationView_centre_curve_height, resources.getDimensionPixelSize(com.luseen.spacenavigation.R.dimen.space_navigation_height));
+            mainContentHeight = typedArray.getDimensionPixelSize(R.styleable.SpaceNavigationView_space_navigation_height, resources.getDimensionPixelSize(com.luseen.spacenavigation.R.dimen.main_content_height));
+            centerCurveDisabled = typedArray.getBoolean(R.styleable.SpaceNavigationView_centre_curve_disabled,false);
+            centerLabel = typedArray.getString(R.styleable.SpaceNavigationView_centre_label);
+            centerButtonFull = typedArray.getBoolean(R.styleable.SpaceNavigationView_centre_button_full_icon,false);
             typedArray.recycle();
         }
     }
@@ -244,7 +260,11 @@ public class SpaceNavigationView extends RelativeLayout {
         /**
          * Get left or right content width
          */
-        contentWidth = (width - spaceNavigationHeight) / 2;
+        if(centreButton != null) {
+            contentWidth = (width - centreButton.getWidth()) / 2;
+        } else {
+            contentWidth = width / 2;
+        }
 
         /**
          * Removing all view for not being duplicated
@@ -289,8 +309,11 @@ public class SpaceNavigationView extends RelativeLayout {
         centreButton.setRippleColor(centreButtonRippleColor);
         centreButton.setBackgroundTintList(ColorStateList.valueOf(centreButtonColor));
         centreButton.setImageResource(centreButtonIcon);
+        if(centerButtonFull){
+            centreButton.setPadding(0,0,0,0);
+        }
 
-        if (isCentreButtonIconColorFilterEnabled || isCentreButtonSelectable)
+        if (isCentreButtonIconColorFilterEnabled)
             centreButton.getDrawable().setColorFilter(inActiveCentreButtonIconColor, PorterDuff.Mode.SRC_IN);
 
         centreButton.setOnClickListener(new OnClickListener() {
@@ -313,10 +336,35 @@ public class SpaceNavigationView extends RelativeLayout {
         });
 
         /**
+         * Set center button label params
+         */
+        centerLabelTextView = new TextView(this.getContext());
+        centerLabelTextView.setText(centerLabel);
+        centerLabelTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, spaceItemTextSize);
+        centerLabelTextView.setTextColor(inActiveSpaceItemColor);
+
+            /**
+             * Set custom font to space item textView
+             */
+        if (isCustomFont)
+            centerLabelTextView.setTypeface(customFont);
+        LayoutParams centerLabelParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        centerLabelParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        centerLabelParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        centerLabelParams.bottomMargin = Utils.getPxFromDp(getContext(),16);
+
+
+        /**
          * Set fab layout params
          */
         LayoutParams fabParams = new LayoutParams(centreButtonSize, centreButtonSize);
-        fabParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+
+        if(centerLabel != null && !centerLabel.isEmpty()){
+            fabParams.addRule(RelativeLayout.ABOVE,centerLabelTextView.getId());
+            fabParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        } else {
+            fabParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        }
 
         /**
          * Main content size
@@ -363,6 +411,7 @@ public class SpaceNavigationView extends RelativeLayout {
          * Adding view to centreContent
          */
         centreContent.addView(centreButton, fabParams);
+        centreContent.addView(centerLabelTextView,centerLabelParams);
 
         /**
          * Adding views to mainContent
@@ -428,7 +477,12 @@ public class SpaceNavigationView extends RelativeLayout {
 
             RelativeLayout.LayoutParams textAndIconContainerParams = new RelativeLayout.LayoutParams(
                     targetWidth, mainContentHeight);
-            RelativeLayout textAndIconContainer = (RelativeLayout) inflater.inflate(R.layout.space_item_view, this, false);
+            RelativeLayout textAndIconContainer;
+            if(spaceItemGravity == LabelGravity.bottom){
+                textAndIconContainer = (RelativeLayout) inflater.inflate(R.layout.space_item_view_bottom_label, this, false);
+            }else {
+                textAndIconContainer = (RelativeLayout) inflater.inflate(R.layout.space_item_view, this, false);
+            }
             textAndIconContainer.setLayoutParams(textAndIconContainerParams);
 
             ImageView spaceItemIcon = (ImageView) textAndIconContainer.findViewById(R.id.space_icon);
@@ -537,33 +591,40 @@ public class SpaceNavigationView extends RelativeLayout {
             return;
         }
 
-        if (isCentreButtonSelectable) {
-            /**
-             * Selects the centre button as current
-             */
-            if (selectedIndex == -1) {
-                if (centreButton != null) {
+
+        /**
+         * Selects the centre button as current
+         */
+        if (selectedIndex == -1) {
+            if (centreButton != null) {
+                if (isCentreButtonSelectable && isCentreButtonIconColorFilterEnabled) {
                     centreButton.getDrawable().setColorFilter(activeCentreButtonIconColor, PorterDuff.Mode.SRC_IN);
 
                     if (activeCentreButtonBackgroundColor != NOT_DEFINED) {
                         centreButton.setBackgroundTintList(ColorStateList.valueOf(activeCentreButtonBackgroundColor));
                     }
                 }
+                centerLabelTextView.setTextColor(activeSpaceItemColor);
             }
+        }
 
-            /**
-             * Removes selection from centre button
-             */
-            if (currentSelectedItem == -1) {
-                if (centreButton != null) {
+        /**
+         * Removes selection from centre button
+         */
+        if (currentSelectedItem == -1) {
+            if (centreButton != null) {
+                if (isCentreButtonSelectable && isCentreButtonIconColorFilterEnabled) {
                     centreButton.getDrawable().setColorFilter(inActiveCentreButtonIconColor, PorterDuff.Mode.SRC_IN);
 
                     if (activeCentreButtonBackgroundColor != NOT_DEFINED) {
                         centreButton.setBackgroundTintList(ColorStateList.valueOf(centreButtonColor));
                     }
+
                 }
+                centerLabelTextView.setTextColor(inActiveSpaceItemColor);
             }
         }
+
 
         /**
          * Change active and inactive icon and text color
@@ -693,7 +754,7 @@ public class SpaceNavigationView extends RelativeLayout {
      * @return created bezier view
      */
     private BezierView buildBezierView() {
-        BezierView bezierView = new BezierView(context, spaceBackgroundColor);
+        BezierView bezierView = new BezierView(context, spaceBackgroundColor,centerCurveDisabled);
         bezierView.build(centreContentWight, spaceNavigationHeight - mainContentHeight);
         return bezierView;
     }

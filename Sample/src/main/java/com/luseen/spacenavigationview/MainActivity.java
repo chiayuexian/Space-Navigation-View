@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         spaceNavigationView.addSpaceItem(new SpaceItem("HOME", R.drawable.account));
         spaceNavigationView.addSpaceItem(new SpaceItem("SEARCH", R.drawable.magnify));
         spaceNavigationView.shouldShowFullBadgeText(true);
+        spaceNavigationView.setCentreButtonSelectable(true);
         spaceNavigationView.setCentreButtonIconColorFilterEnabled(false);
 
         spaceNavigationView.setSpaceOnClickListener(new SpaceOnClickListener() {

@@ -13,6 +13,15 @@
         <attr name="active_centre_button_icon_color" format="color" />
         <attr name="inactive_centre_button_icon_color" format="color" />
         <attr name="active_centre_button_background_color" format="color"/>
+        <attr name="label_gravity" format="enum">
+            <enum name="right" value="0"/>
+            <enum name="bottom" value="1"/>
+        </attr>
+        <attr name="space_navigation_height" format="dimension"/>
+        <attr name="centre_curve_height" format="dimension"/>
+        <attr name="centre_label" format="string"/>
+        <attr name="centre_curve_disabled" format="boolean"/>
+        <attr name="centre_button_full_icon" format="boolean"/>
     </declare-styleable>
 
 </resources>

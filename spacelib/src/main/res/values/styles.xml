@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="centerLabelTextStyle" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/space_item_text_default_size</item>
+    </style>
+</resources>

@@ -21,9 +21,11 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.RippleDrawable;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -83,6 +85,10 @@ class Utils {
                 .translationY(value)
                 .setDuration(150)
                 .start();
+    }
+    public static int getPxFromDp(Context context, int dp){
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        return (int)(dp * displayMetrics.density + 0.5);
     }
 
     // TODO: 15.08.2016 add ripple effect programmatically

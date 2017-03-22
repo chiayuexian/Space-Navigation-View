@@ -36,9 +36,9 @@ class BezierView extends RelativeLayout {
     private int backgroundColor;
 
     private Context context;
+    private boolean disableCurve = false;
 
-
-    BezierView(Context context, int backgroundColor) {
+    BezierView(Context context, int backgroundColor,boolean disableCurve) {
         super(context);
         this.context = context;
         this.backgroundColor = backgroundColor;
@@ -47,6 +47,8 @@ class BezierView extends RelativeLayout {
         paint.setStrokeWidth(0);
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.FILL);
+        this.disableCurve = disableCurve;
+        this.setClickable(true);
     }
 
     @Override
@@ -73,16 +75,17 @@ class BezierView extends RelativeLayout {
          */
         path.moveTo(0, bezierHeight);
 
-        /**
-         * Seth half path of bezier view
-         */
-        path.cubicTo(bezierWidth / 4, bezierHeight, bezierWidth / 4, 0, bezierWidth / 2, 0);
+        if(!disableCurve) {
+            /**
+             * Seth half path of bezier view
+             */
+            path.cubicTo(bezierWidth / 4, bezierHeight, bezierWidth / 4, 0, bezierWidth / 2, 0);
 
-        /**
-         * Seth second part of bezier view
-         */
-        path.cubicTo((bezierWidth / 4) * 3, 0, (bezierWidth / 4) * 3, bezierHeight, bezierWidth, bezierHeight);
-
+            /**
+             * Seth second part of bezier view
+             */
+            path.cubicTo((bezierWidth / 4) * 3, 0, (bezierWidth / 4) * 3, bezierHeight, bezierWidth, bezierHeight);
+        }
         /**
          * Draw our bezier view
          */
