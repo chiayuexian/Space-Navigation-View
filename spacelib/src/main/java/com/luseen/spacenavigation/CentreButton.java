@@ -15,7 +15,9 @@ public class CentreButton extends FloatingActionButton {
         super(context);
         if(Build.VERSION.SDK_INT > 21){
             setElevation(0f);
+            setStateListAnimator(null);
         }
+
     }
 
     @Override
