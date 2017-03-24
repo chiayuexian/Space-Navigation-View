@@ -420,6 +420,8 @@ public class SpaceNavigationView extends RelativeLayout {
         /**
          * Adding view to centreContent
          */
+        if(centreButton.getParent()!=null)
+            ((ViewGroup)centreButton.getParent()).removeView(centreButton);
         centreContent.addView(centreButton, fabParams);
         centreContent.addView(centerLabelTextView,centerLabelParams);
 
