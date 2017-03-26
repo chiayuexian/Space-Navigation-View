@@ -17,6 +17,8 @@ public class CentreButton extends FloatingActionButton {
             setElevation(0f);
             setStateListAnimator(null);
         }
+        setCompatElevation(0f);
+
     }
 
     @Override
